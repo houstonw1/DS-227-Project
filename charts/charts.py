@@ -16,3 +16,5 @@ def chart_crime_time(df: pd.DataFrame) -> alt.Chart:
             ]
         ).properties(height=400, title="Total Reported Crimes in Chicago (2001–Present)")
     )
+
+#Checking
