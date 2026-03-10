@@ -8,6 +8,8 @@ from charts.charts import (
     chart_arrest_rate_map,
     chart_violent_vs_property,
     chart_interactive_ward_map,
+    chart_arrests_reports,
+    chart_income_crime,
 )
 
 df = load_crimes()
@@ -18,7 +20,7 @@ st.title("Interactive Exploratory View")
 st.write("Use the interactive charts below to explore the data at your own pace.")
 
 # --- Chart 1 ---
-st.subheader("Chicago Citywide Crime Trends")
+st.subheader("1. Chicago Citywide Crime Trends")
 st.altair_chart(chart_crime_time(df), use_container_width=True)
 st.markdown("""
 We visualize using a line chart because it is the most effective way to visualize how a quantity
@@ -109,4 +111,35 @@ the spatial distribution of crime changes over time rather than seeing only a si
 For the 2001 year alone, the visualization shows that crime is consistently concentrated in certain
 wards, especially in parts of central and southern Chicago, while other wards remain relatively
 lower across time.
+""")
+
+# --- Chart 8 ---
+st.subheader("8. Top 15 Community Areas - Poverty in Relation to Crime Report and Arrest Totals")
+st.altair_chart(chart_arrests_reports(df, socio), use_container_width = True)
+st.markdown("""
+    We used side-by-side horizontal bar charts to compare the top community areas by total crimes 
+    and by total arrests because this layout makes it easy to see whether the same neighborhoods 
+    appear in both rankings. Coloring the bars by percent of households below poverty adds a third 
+    variable without overcrowding the figure, allowing the chart to connect crime and arrest patterns 
+    with socioeconomic conditions. The visualization shows that some community areas, such as 25, rank 
+    highly in both total crimes and total arrests, while others differ between the two measures, 
+    suggesting that crime volume and arrest volume do not always move together. The darker blue shading 
+    in several high-crime or high-arrest areas also suggests that neighborhoods with higher poverty levels 
+    may be more strongly represented among these areas, pointing to a possible relationship between public safety 
+    outcomes and structural disadvantage.
+""")
+
+# --- Chart 9 ---
+st.subheader("9. Top 15 Highest and Lowest Income Areas vs Most Common Crime Type")
+st.altair_chart(chart_income_crime(df, socio), use_container_width = True)
+st.markdown("""
+    We used side-by-side horizontal bar charts to compare the highest-income and lowest-income community 
+    areas because this layout makes differences in total crime levels between the two groups easy to 
+    see directly. Coloring the bars by each area's most common crime type adds another layer of information 
+    without making the chart too crowded, allowing both crime volume and crime composition to be compared 
+    at once. The visualization shows that the lowest-income community areas generally have higher total 
+    crime counts than the highest-income areas, and their most common crimes are more varied, including 
+    battery and narcotics. In contrast, the highest-income community areas are more consistently dominated 
+    by theft, suggesting that both the amount and type of crime may differ systematically across neighborhoods 
+    with different income levels.
 """)

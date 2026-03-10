@@ -206,3 +206,122 @@ def chart_interactive_ward_map(df, chi_map):
         width=650, height=650,
         title="Interactive Crime Distribution by Ward and Year"
     ).project(type="mercator")
+
+def chart_arrests_reports(df: pd.DataFrame, socio: pd.DataFrame) -> alt.Chart:
+    socio_slim = socio[["community_area", "pct_below_poverty"]]
+    df_community = (
+        df.groupby("community_area")
+        .agg(total_crimes=("id", "count"), total_arrests=("arrest", lambda x: x.eq(True).sum()))
+        .reset_index()
+        .dropna(subset=["community_area"])
+    )
+    df_community["community_area"] = df_community["community_area"].astype(int)
+    df_community = df_community.merge(socio_slim, on="community_area", how="left")
+
+    df_top15_crimes  = df_community.sort_values("total_crimes",  ascending=False).head(15)
+    df_top15_arrests = df_community.sort_values("total_arrests", ascending=False).head(15)
+
+    color_scale = alt.Color(
+        "pct_below_poverty:Q",
+        scale=alt.Scale(scheme="blues"),
+        legend=alt.Legend(title="% Below Poverty")
+    )
+
+    chart_crimes = (
+        alt.Chart(df_top15_crimes).mark_bar()
+        .encode(
+            x=alt.X("total_crimes:Q",   title="Total Crimes",  axis=alt.Axis(format="~s")),
+            y=alt.Y("community_area:O", sort="-x",             title="Community Area"),
+            color=color_scale,
+            tooltip=[
+                alt.Tooltip("community_area:O",    title="Community Area"),
+                alt.Tooltip("total_crimes:Q",      title="Total Crimes",    format=".0f"),
+                alt.Tooltip("pct_below_poverty:Q", title="% Below Poverty", format=".1f"),
+            ]
+        )
+        .properties(height=400, title="Top 15 Community Areas by Total Reported Crimes")
+    )
+
+    chart_arrests = (
+        alt.Chart(df_top15_arrests).mark_bar()
+        .encode(
+            x=alt.X("total_arrests:Q",  title="Total Arrests", axis=alt.Axis(format="~s")),
+            y=alt.Y("community_area:O", sort="-x",             title=""),
+            color=color_scale,
+            tooltip=[
+                alt.Tooltip("community_area:O",    title="Community Area"),
+                alt.Tooltip("total_arrests:Q",     title="Total Arrests",   format=".0f"),
+                alt.Tooltip("pct_below_poverty:Q", title="% Below Poverty", format=".1f"),
+            ]
+        )
+        .properties(height=400, title="Top 15 Community Areas by Total Arrests")
+    )
+
+    return (chart_crimes | chart_arrests).resolve_scale(color="shared")
+
+def chart_income_crime(df: pd.DataFrame, socio: pd.DataFrame) -> alt.Chart:
+    socio_slim = socio[["community_area", "per_capita_income"]]
+    most_common_crime = (
+        df.groupby(["community_area", "primary_type"])
+        .size()
+        .reset_index(name="crime_count")
+        .sort_values("crime_count", ascending=False)
+        .drop_duplicates(subset="community_area")
+        .rename(columns={"primary_type": "most_common_crime"})
+        [["community_area", "most_common_crime"]]
+    )
+    df_community = (
+        df.groupby("community_area")
+        .agg(total_crimes=("id", "count"))
+        .reset_index()
+        .dropna(subset=["community_area"])
+    )
+    df_community["community_area"] = df_community["community_area"].astype(int)
+    df_community = (
+        df_community
+        .merge(socio_slim, on="community_area", how="left")
+        .merge(most_common_crime, on="community_area", how="left")
+    )
+
+    df_high_income = df_community.sort_values("per_capita_income", ascending=False).head(15)
+    df_low_income  = df_community.sort_values("per_capita_income", ascending=True).head(15)
+
+    color_scale = alt.Color(
+        "most_common_crime:N",
+        scale=alt.Scale(scheme="tableau20"),
+        legend=alt.Legend(title="Most Common Crime")
+    )
+
+    chart_high = (
+        alt.Chart(df_high_income).mark_bar()
+        .encode(
+            x=alt.X("total_crimes:Q",   title="Total Crimes",  axis=alt.Axis(format="~s")),
+            y=alt.Y("community_area:O", sort="-x",             title="Community Area"),
+            color=color_scale,
+            tooltip=[
+                alt.Tooltip("community_area:O",    title="Community Area"),
+                alt.Tooltip("per_capita_income:Q", title="Per Capita Income", format="$,.0f"),
+                alt.Tooltip("total_crimes:Q",      title="Total Crimes",      format=".0f"),
+                alt.Tooltip("most_common_crime:N", title="Most Common Crime"),
+            ]
+        )
+        .properties(width=400, height=400, title="15 Highest Income Community Areas — Most Common Crime")
+    )
+
+    chart_low = (
+        alt.Chart(df_low_income).mark_bar()
+        .encode(
+            x=alt.X("total_crimes:Q",   title="Total Crimes",  axis=alt.Axis(format="~s")),
+            y=alt.Y("community_area:O", sort="-x",             title=""),
+            color=color_scale,
+            tooltip=[
+                alt.Tooltip("community_area:O",    title="Community Area"),
+                alt.Tooltip("per_capita_income:Q", title="Per Capita Income", format="$,.0f"),
+                alt.Tooltip("total_crimes:Q",      title="Total Crimes",      format=".0f"),
+                alt.Tooltip("most_common_crime:N", title="Most Common Crime"),
+            ]
+        )
+        .properties(height=400, title="15 Lowest Income Community Areas — Most Common Crime")
+    )
+
+    return (chart_high | chart_low).resolve_scale(color="shared")
