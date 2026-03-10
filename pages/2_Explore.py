@@ -143,3 +143,30 @@ st.markdown("""
     by theft, suggesting that both the amount and type of crime may differ systematically across neighborhoods 
     with different income levels.
 """)
+
+st.divider()
+
+st.subheader("Conclusion")
+st.markdown("""
+This analysis set out to examine how crime patterns across Chicago relate to socioeconomic
+conditions in different neighborhoods. Across nine visualizations, a consistent and troubling
+picture emerges.
+
+Chicago's overall crime rate has declined significantly since the early 2000s, yet this
+improvement has not been felt equally across the city. Crime remains heavily concentrated in
+a small number of community areas, with just a handful of neighborhoods accounting for a
+disproportionately large share of total reported incidents. Geographic maps further reveal
+that arrest rates, violent crime, and property crime each follow distinct spatial patterns,
+clustering in specific wards rather than spreading evenly across the city.
+
+When socioeconomic data is layered onto these patterns, the connection becomes difficult to
+ignore. Community areas with higher poverty rates consistently appear among those with the
+most crimes and arrests. Low-income neighborhoods are not only exposed to more crime overall,
+but also to fundamentally different types of crime — including battery and narcotics — compared
+to higher-income areas, where theft dominates.
+
+These findings suggest that crime in Chicago is not random, but deeply shaped by structural
+inequality. Addressing long-term public safety challenges in the city will likely require
+tackling the underlying socioeconomic conditions that concentrate disadvantage in specific
+neighborhoods.
+""")
