@@ -39,14 +39,14 @@ st.caption("Takeaway: Reported crimes in Chicago generally declined steadily fro
 
 st.divider()
 
-st.header("8. How does cimmunity area's percentage of households below poverty affect the amount of reported crimes vs actual arrest?")
+st.header("2. How does community area's percentage of households below poverty affect the amount of reported crimes vs actual arrest?")
 st.write("This chart directly connects crime to socioeconomic data. We examine whether the community areas with the highest crime reports have the highest arrest rates and all in relation to percentage of households below poverty.")
 st.altair_chart(chart_arrests_reports(df, socio), use_container_width=True)
 st.caption("Takeaway: Darker blue bars indicate higher poverty and are more common among the highest arrest totals rather than report totals. Areas that see more significant poverty, typically have higher arrest totals vs report totals.")
 
 st.divider()
 
-st.header("9. How does the most common type of crime change across the highest and lowest income per capita community areas?")
+st.header("3. How does the most common type of crime change across the highest and lowest income per capita community areas?")
 st.write("Comparing the 15 highest and lowest income community areas reveals differences in both crime volume and dominant crime type.")
 st.altair_chart(chart_income_crime(df, socio), use_container_width=True)
 st.caption("Takeaway: Low-income areas have higher crime totals and dominant crime types of Narcotics and Battery. High-income areas are consistently dominated by theft. This implies an inequality that socioeconomic conditions shape not just how much crime occurs, but what kind of crime communities are exposed to.")
