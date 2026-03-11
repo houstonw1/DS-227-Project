@@ -7,7 +7,7 @@ import gdown
 def load_crimes() -> pd.DataFrame:
     if not os.path.exists("Crimes.csv"):
         gdown.download(
-            "https://drive.google.com/uc?id=10BTXAs3nVkwz6206weO0SzT3Jjvxb-0g",
+            "https://drive.google.com/uc?id=1ks5mn1SiKh8iFbmOWHslqw1DnBfPaELa",
             "Crimes.csv",
             quiet=False
         )
@@ -45,3 +45,4 @@ def load_geojson():
     import json
     with open("chicago-ward-boundaries.geojson") as f:
         return json.load(f)
+        
