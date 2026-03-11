@@ -1,0 +1,31 @@
+community_area,total_crimes,primary_type,per_capita_income,community_name,group
+3,117614,THEFT,35787,Uptown,High Income
+39,47385,THEFT,35911,Kenwood,High Income
+4,57069,THEFT,37524,Lincoln Square,High Income
+41,53336,THEFT,39056,Hyde Park,High Income
+72,28851,THEFT,39523,Beverly,High Income
+9,7938,THEFT,40959,Edison Park,High Income
+24,231802,THEFT,43198,West Town,High Income
+12,14736,THEFT,44164,Forest Glen,High Income
+28,247179,THEFT,44689,Near West Side,High Income
+5,46236,THEFT,57123,North Center,High Income
+33,63014,THEFT,59077,Near South Side,High Income
+6,163292,THEFT,60058,Lake View,High Income
+32,203002,THEFT,65526,Loop,High Income
+7,123010,THEFT,71551,Lincoln Park,High Income
+8,284844,THEFT,88669,Near North Side,High Income
+54,35708,BATTERY,8201,Riverdale,Low Income
+30,132309,BATTERY,10402,South Lawndale,Low Income
+37,25782,BATTERY,10432,Fuller Park,Low Income
+26,145933,NARCOTICS,10934,West Garfield Park,Low Income
+67,218114,BATTERY,11317,West Englewood,Low Income
+68,201528,BATTERY,11888,Englewood,Low Income
+29,228957,BATTERY,12034,North Lawndale,Low Income
+63,72118,BATTERY,12171,Gage Park,Low Income
+47,11576,BATTERY,12515,Burnside,Low Income
+61,155789,BATTERY,12765,New City,Low Income
+27,145514,NARCOTICS,12961,East Garfield Park,Low Income
+58,75366,BATTERY,13089,Brighton Park,Low Income
+66,189126,BATTERY,13231,Chicago Lawn,Low Income
+23,243259,NARCOTICS,13781,Humboldt park,Low Income
+40,82894,BATTERY,13785,Washington Park,Low Income
