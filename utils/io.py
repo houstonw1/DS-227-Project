@@ -58,4 +58,12 @@ def load_socio() -> pd.DataFrame:
 def load_geojson():
     with open("chicago-ward-boundaries.geojson") as f:
         return json.load(f)
-        
+
+@st.cache_data
+def load_agg_community_poverty() -> pd.DataFrame:
+    return pd.read_csv("agg_community_poverty.csv")
+
+@st.cache_data
+def load_agg_income_crime() -> pd.DataFrame:
+    return pd.read_csv("agg_income_crime.csv")
+    

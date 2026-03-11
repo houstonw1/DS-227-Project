@@ -1,14 +1,14 @@
 import streamlit as st
-from utils.io import load_crimes, load_geojson, load_socio
+from utils.io import load_agg_yearly, load_agg_community_poverty, load_agg_income_crime
 from charts.charts import (
     chart_crime_time,
     chart_arrests_reports,
     chart_income_crime,
 )
 
-df = load_crimes()
-socio = load_socio()
-chi_map = load_geojson()
+df = load_agg_yearly()
+df_community_poverty = load_agg_community_poverty()
+df_income_crime = load_agg_income_crime()
 
 st.title("Crime and Socioeconomic Factors in Chicago: A Data Story")
 st.markdown("**Central Question**: How do crime patterns across Chicago relate to socioeconomic conditions in specific neighborhoods?")
@@ -41,14 +41,14 @@ st.divider()
 
 st.header("2. How does community area's percentage of households below poverty affect the amount of reported crimes vs actual arrest?")
 st.write("This chart directly connects crime to socioeconomic data. We examine whether the community areas with the highest crime reports have the highest arrest rates and all in relation to percentage of households below poverty.")
-st.altair_chart(chart_arrests_reports(df, socio), use_container_width=True)
+st.altair_chart(chart_arrests_reports(df_community_poverty), use_container_width=True)
 st.caption("Takeaway: Darker blue bars indicate higher poverty and are more common among the highest arrest totals rather than report totals. Areas that see more significant poverty, typically have higher arrest totals vs report totals.")
 
 st.divider()
 
 st.header("3. How does the most common type of crime change across the highest and lowest income per capita community areas?")
 st.write("Comparing the 15 highest and lowest income community areas reveals differences in both crime volume and dominant crime type.")
-st.altair_chart(chart_income_crime(df, socio), use_container_width=True)
+st.altair_chart(chart_income_crime(df_income_crime), use_container_width=True)
 st.caption("Takeaway: Low-income areas have higher crime totals and dominant crime types of Narcotics and Battery. High-income areas are consistently dominated by theft. This implies an inequality that socioeconomic conditions shape not just how much crime occurs, but what kind of crime communities are exposed to.")
 
 st.divider()

@@ -153,3 +153,54 @@ def chart_interactive_ward_map(df_ward_year, chi_map):
     ).add_params(year_slider).properties(
         width=650, height=650, title="Interactive Crime Distribution by Ward and Year"
     ).project(type="mercator")
+
+def chart_arrests_reports(df_community_poverty):
+    df = df_community_poverty.dropna(subset=["pct_below_poverty"])
+    df = df[df["community_area"] != 0]
+    df = df.sort_values("total_crimes", ascending=False).head(30)
+    base = alt.Chart(df)
+    bars_crimes = base.mark_bar(opacity=0.4).encode(
+        x=alt.X("community_area:O", sort="-y", title="Community Area"),
+        y=alt.Y("total_crimes:Q", title="Count", axis=alt.Axis(format='~s')),
+        color=alt.value("gray"),
+        tooltip=[
+            alt.Tooltip("community_area:O", title="Community Area"),
+            alt.Tooltip("total_crimes:Q", title="Total Crimes", format=",.0f"),
+        ]
+    )
+    bars_arrests = base.mark_bar().encode(
+        x=alt.X("community_area:O", sort="-y"),
+        y=alt.Y("total_arrests:Q"),
+        color=alt.Color("pct_below_poverty:Q",
+            scale=alt.Scale(scheme="blues"),
+            legend=alt.Legend(title="% Below Poverty")
+        ),
+        tooltip=[
+            alt.Tooltip("community_area:O", title="Community Area"),
+            alt.Tooltip("total_arrests:Q", title="Total Arrests", format=",.0f"),
+            alt.Tooltip("pct_below_poverty:Q", title="% Below Poverty", format=".1f"),
+        ]
+    )
+    return (bars_crimes + bars_arrests).properties(
+        height=400,
+        title="Top 30 Community Areas: Reported Crimes vs Arrests, Colored by Poverty Rate"
+    )
+
+
+def chart_income_crime(df_income_crime):
+    return alt.Chart(df_income_crime).mark_bar().encode(
+        x=alt.X("total_crimes:Q", title="Total Crimes", axis=alt.Axis(format='~s')),
+        y=alt.Y("community_name:N", sort="-x", title="Community Area"),
+        color=alt.Color("primary_type:N", legend=alt.Legend(title="Dominant Crime Type")),
+        row=alt.Row("group:N", title=""),
+        tooltip=[
+            alt.Tooltip("community_name:N", title="Community"),
+            alt.Tooltip("total_crimes:Q", title="Total Crimes", format=",.0f"),
+            alt.Tooltip("primary_type:N", title="Dominant Crime Type"),
+            alt.Tooltip("per_capita_income:Q", title="Per Capita Income", format="$,.0f"),
+        ]
+    ).properties(
+        width=600, height=200,
+        title="Dominant Crime Type in Highest vs Lowest Income Community Areas"
+    )
+    
