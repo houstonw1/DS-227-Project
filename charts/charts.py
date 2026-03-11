@@ -186,21 +186,25 @@ def chart_arrests_reports(df_community_poverty):
         title="Top 30 Community Areas: Reported Crimes vs Arrests, Colored by Poverty Rate"
     )
 
-
 def chart_income_crime(df_income_crime):
-    return alt.Chart(df_income_crime).mark_bar().encode(
-        x=alt.X("total_crimes:Q", title="Total Crimes", axis=alt.Axis(format='~s')),
-        y=alt.Y("community_name:N", sort="-x", title="Community Area"),
-        color=alt.Color("primary_type:N", legend=alt.Legend(title="Dominant Crime Type")),
-        row=alt.Row("group:N", title=""),
-        tooltip=[
-            alt.Tooltip("community_name:N", title="Community"),
-            alt.Tooltip("total_crimes:Q", title="Total Crimes", format=",.0f"),
-            alt.Tooltip("primary_type:N", title="Dominant Crime Type"),
-            alt.Tooltip("per_capita_income:Q", title="Per Capita Income", format="$,.0f"),
-        ]
-    ).properties(
-        width=600, height=200,
+    high = df_income_crime[df_income_crime["group"] == "High Income"]
+    low = df_income_crime[df_income_crime["group"] == "Low Income"]
+
+    def make_bar(data, title):
+        return alt.Chart(data).mark_bar().encode(
+            x=alt.X("total_crimes:Q", title="Total Crimes", axis=alt.Axis(format='~s')),
+            y=alt.Y("community_name:N", sort="-x", title=""),
+            color=alt.Color("primary_type:N", legend=alt.Legend(title="Dominant Crime Type")),
+            tooltip=[
+                alt.Tooltip("community_name:N", title="Community"),
+                alt.Tooltip("total_crimes:Q", title="Total Crimes", format=",.0f"),
+                alt.Tooltip("primary_type:N", title="Dominant Crime Type"),
+                alt.Tooltip("per_capita_income:Q", title="Per Capita Income", format="$,.0f"),
+            ]
+        ).properties(width=600, height=300, title=title)
+
+    return alt.vconcat(
+        make_bar(high, "High Income Community Areas"),
+        make_bar(low, "Low Income Community Areas"),
         title="Dominant Crime Type in Highest vs Lowest Income Community Areas"
     )
-    
