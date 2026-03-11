@@ -1,31 +1,45 @@
 import streamlit as st
-import pandas as pd 
-import os
-import gdown
+import pandas as pd
+import json
 
 @st.cache_data
 def load_crimes() -> pd.DataFrame:
-    if not os.path.exists("Crimes.csv"):
-        gdown.download(
-            "https://drive.google.com/uc?id=1ks5mn1SiKh8iFbmOWHslqw1DnBfPaELa",
-            "Crimes.csv",
-            quiet=False
-        )
-    df = pd.read_csv("Crimes.csv")
-    df.columns = df.columns.str.lower().str.replace(" ", "_")
-    df["date"] = pd.to_datetime(df["date"])
-    df["year"] = df["date"].dt.year
-    df = df.dropna(subset=["year"])
+    # Load from pre-aggregated files instead of raw CSV
+    # This is a compatibility shim that returns a minimal df for charts
+    # that still need the raw-style interface
+    yearly = pd.read_csv("agg_yearly.csv")
+    year_type = pd.read_csv("agg_year_type.csv")
+    return {"yearly": yearly, "year_type": year_type}
+
+@st.cache_data
+def load_agg_yearly() -> pd.DataFrame:
+    return pd.read_csv("agg_yearly.csv")
+
+@st.cache_data
+def load_agg_year_type() -> pd.DataFrame:
+    return pd.read_csv("agg_year_type.csv")
+
+@st.cache_data
+def load_agg_community() -> pd.DataFrame:
+    return pd.read_csv("agg_community.csv")
+
+@st.cache_data
+def load_agg_ward() -> pd.DataFrame:
+    return pd.read_csv("agg_ward.csv")
+
+@st.cache_data
+def load_agg_ward_year() -> pd.DataFrame:
+    df = pd.read_csv("agg_ward_year.csv")
+    df["ward"] = df["ward"].astype(int).astype(str)
     df["year"] = df["year"].astype(int)
-    violent_crimes = [
-        "HOMICIDE", "ASSAULT", "BATTERY",
-        "CRIMINAL SEXUAL ASSAULT", "ROBBERY"
-    ]
-    df["crime_category"] = df["primary_type"].apply(
-        lambda x: "Violent Crime" if x in violent_crimes else "Property Crime"
-    )
     return df
-    
+
+@st.cache_data
+def load_agg_ward_category() -> pd.DataFrame:
+    df = pd.read_csv("agg_ward_category.csv")
+    df["ward"] = df["ward"].astype(int).astype(str)
+    return df
+
 @st.cache_data
 def load_socio() -> pd.DataFrame:
     socio = pd.read_csv("Chicago_Socioeco_2008_2012.csv")
@@ -42,7 +56,6 @@ def load_socio() -> pd.DataFrame:
 
 @st.cache_data
 def load_geojson():
-    import json
     with open("chicago-ward-boundaries.geojson") as f:
         return json.load(f)
         
