@@ -25,18 +25,7 @@ def load_crimes() -> pd.DataFrame:
         lambda x: "Violent Crime" if x in violent_crimes else "Property Crime"
     )
     return df
-```
-
-Also update `requirements.txt` in VS Code to add `gdown`:
-```
-streamlit
-altair
-pandas
-numpy
-bokeh
-geojson
-gdown
-
+    
 @st.cache_data
 def load_socio() -> pd.DataFrame:
     socio = pd.read_csv("Chicago_Socioeco_2008_2012.csv")
